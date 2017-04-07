@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using NJsonSchema;
 using NJsonSchema.Generation;
 using NJsonSchema.Infrastructure;
 using NSwag.SwaggerGeneration.Processors;
@@ -50,11 +51,14 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
                 .Where(a => a.GetType().Name == "ProducesResponseTypeAttribute")
                 .ToList();
 
+            var responses = new List<OperationResponseModel>();
+
             if (responseTypeAttributes.Any() || producesResponseTypeAttributes.Any())
             {
-                var responses = new List<OperationResponseModel>();
                 foreach (var attribute in responseTypeAttributes)
                 {
+                    string[] contentTypes = null;
+
                     dynamic responseTypeAttribute = attribute;
                     var attributeType = attribute.GetType();
 
@@ -73,6 +77,9 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
                     else if (attributeType.GetRuntimeProperty("StatusCode") != null && responseTypeAttribute.StatusCode != null)
                         httpStatusCode = responseTypeAttribute.StatusCode.ToString();
 
+                    if (attributeType.GetRuntimeProperty("ContentTypes") != null)
+                        contentTypes = responseTypeAttribute.ContentTypes;
+
                     var description = HttpUtilities.IsSuccessStatusCode(httpStatusCode) ? successXmlDescription : string.Empty;
                     if (attributeType.GetRuntimeProperty("Description") != null)
                     {
@@ -80,15 +87,18 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
                             description = responseTypeAttribute.Description;
                     }
 
-                    responses.Add(new OperationResponseModel(httpStatusCode, returnType, description));
+                    responses.Add(new OperationResponseModel(httpStatusCode, returnType, contentTypes, description));
                 }
 
                 foreach (dynamic producesResponseTypeAttribute in producesResponseTypeAttributes)
                 {
+                    string[] contentTypes = null;
+
                     var returnType = producesResponseTypeAttribute.Type;
                     var httpStatusCode = producesResponseTypeAttribute.StatusCode.ToString(CultureInfo.InvariantCulture);
                     var description = HttpUtilities.IsSuccessStatusCode(httpStatusCode) ? successXmlDescription : string.Empty;
-                    responses.Add(new OperationResponseModel(httpStatusCode, returnType, description));
+
+                    responses.Add(new OperationResponseModel(httpStatusCode, returnType, contentTypes, description));
                 }
 
                 foreach (var group in responses.GroupBy(r => r.HttpStatusCode))
@@ -96,6 +106,7 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
                     var httpStatusCode = group.Key;
                     var returnType = group.Select(r => r.ResponseType).FindCommonBaseType();
                     var description = string.Join("\nor\n", group.Select(r => r.Description));
+                    var contentTypes = group.SelectMany(r => r.ContentTypes).Distinct().ToList();
 
                     var typeDescription = JsonObjectTypeDescription.FromType(returnType, context.MethodInfo.ReturnParameter?.GetCustomAttributes(), _settings.DefaultEnumHandling);
                     var response = new SwaggerResponse
@@ -103,12 +114,17 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
                         Description = description ?? string.Empty
                     };
 
-                    if (IsVoidResponse(returnType) == false)
+                    if (contentTypes.Count == 0 || contentTypes.Contains("application/json"))
                     {
-                        response.IsNullableRaw = typeDescription.IsNullable;
-                        response.Schema = await context.SwaggerGenerator.GenerateAndAppendSchemaFromTypeAsync(returnType, typeDescription.IsNullable, null).ConfigureAwait(false);
-                        response.ExpectedSchemas = await GenerateExpectedSchemasAsync(context, group);
+                        if (IsVoidResponse(returnType) == false)
+                        {
+                            response.IsNullableRaw = typeDescription.IsNullable;
+                            response.Schema = await context.SwaggerGenerator.GenerateAndAppendSchemaFromTypeAsync(returnType, typeDescription.IsNullable, null).ConfigureAwait(false);
+                            response.ExpectedSchemas = await GenerateExpectedSchemasAsync(context, group);
+                        }
                     }
+                    else
+                        response.Schema = new JsonSchema4 { Type = JsonObjectType.File };
 
                     context.OperationDescription.Operation.Responses[httpStatusCode] = response;
                 }
@@ -116,7 +132,35 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors
             else
                 await LoadDefaultSuccessResponseAsync(context.OperationDescription.Operation, context.MethodInfo, successXmlDescription, context.SwaggerGenerator).ConfigureAwait(false);
 
+            GenerateOperationContentTypes(context, responses);
             return true;
+        }
+
+        private void GenerateOperationContentTypes(OperationProcessorContext context, List<OperationResponseModel> responses)
+        {
+            var contentTypes = responses
+                .SelectMany(r => r.ContentTypes)
+                .Distinct()
+                .ToList();
+
+            if (contentTypes.Any())
+            {
+                var hasJsonResponses = context.OperationDescription.Operation.Responses.Any(
+                    r => r.Value.Schema != null && r.Value.Schema.Type != JsonObjectType.File);
+
+                if (hasJsonResponses)
+                    contentTypes.Add("application/json");
+
+                context.OperationDescription.Operation.Produces = contentTypes;
+            }
+            else
+            {
+                var hasFileResponses = context.OperationDescription.Operation.Responses.Any(
+                    r => r.Value.Schema != null && r.Value.Schema.Type == JsonObjectType.File);
+
+                if (hasFileResponses)
+                    context.OperationDescription.Operation.Produces = new List<string> { "application/octet-stream" };
+            }
         }
 
         private async Task<ICollection<JsonExpectedSchema>> GenerateExpectedSchemasAsync(OperationProcessorContext context, IGrouping<string, OperationResponseModel> group)

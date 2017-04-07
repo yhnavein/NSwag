@@ -12,16 +12,19 @@ namespace NSwag.SwaggerGeneration.WebApi.Processors.Models
 {
     internal class OperationResponseModel
     {
-        public OperationResponseModel(string httpStatusCode, Type responseType, string description)
+        public OperationResponseModel(string httpStatusCode, Type responseType, string[] contentTypes, string description)
         {
             HttpStatusCode = httpStatusCode;
             ResponseType = responseType;
+            ContentTypes = contentTypes ?? new string[] { };
             Description = description;
         }
 
         public string HttpStatusCode { get; }
 
         public Type ResponseType { get; }
+
+        public string[] ContentTypes { get; }
 
         public string Description { get; }
     }

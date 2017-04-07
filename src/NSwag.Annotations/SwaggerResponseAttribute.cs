@@ -24,6 +24,13 @@ namespace NSwag.Annotations
 
         /// <summary>Initializes a new instance of the <see cref="SwaggerResponseAttribute"/> class.</summary>
         /// <param name="httpStatusCode">The HTTP status code for which the result type applies.</param>
+        public SwaggerResponseAttribute(HttpStatusCode httpStatusCode)
+        {
+            StatusCode = ((int)httpStatusCode).ToString();
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="SwaggerResponseAttribute"/> class.</summary>
+        /// <param name="httpStatusCode">The HTTP status code for which the result type applies.</param>
         /// <param name="responseType">The JSON result type of the MVC or Web API action method.</param>
         public SwaggerResponseAttribute(string httpStatusCode, Type responseType)
         {
@@ -57,5 +64,8 @@ namespace NSwag.Annotations
 
         /// <summary>Gets or sets the response type.</summary>
         public Type Type { get; set; }
+
+        /// <summary>The MIME types this response can produce (default: 'application/json').</summary>
+        public string[] ContentTypes { get; set; }
     }
 }
