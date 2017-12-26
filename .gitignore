@@ -1,4 +1,13 @@
-﻿src/**/bin/**
+﻿### OSX ###
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+src/**/bin/**
 src/**/obj/**
 src/packages/**
 
