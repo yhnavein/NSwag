@@ -55,7 +55,7 @@ namespace NSwag.CodeGeneration.TypeScript
         public HttpClass HttpClass { get; set; } = HttpClass.Http;
 
         /// <summary>Gets or sets the injection token type (applies only for the Angular template).</summary>
-        public InjectionTokenType InjectionTokenType { get; set; } = InjectionTokenType.OpaqueToken;
+        public InjectionTokenType InjectionTokenType { get; set; } = InjectionTokenType.InjectionToken;
 
         /// <summary>Gets or sets the promise type.</summary>
         public PromiseType PromiseType { get; set; }
