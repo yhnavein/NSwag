@@ -2,7 +2,7 @@
   "profiles": {
     "NSwag.ConsoleCore": {
       "commandName": "Project",
-      "commandLineArgs": "run \"C:\\Data\\Projects\\NSwag\\src\\NSwag.Sample.NETCore11\\nswag.json\""
+      "commandLineArgs": "swagger2tsclient /input:C:\\puredev\\findash\\api\\swagger.json /output:C:\\puredev\\findash\\app-ng\\api.ts /template:Angular /TypeStyle:interface"
     }
   }
 }
