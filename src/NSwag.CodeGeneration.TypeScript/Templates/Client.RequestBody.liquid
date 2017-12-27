@@ -1,5 +1,5 @@
 ﻿{% if operation.HasFormParameters -%}
-const content_ = new FormData();
+const content = new FormData();
 {%     for parameter in operation.FormParameters -%}
 {%         if parameter.IsNullable -%}
 if ({{ parameter.VariableName }} !== null && {{ parameter.VariableName }} !== undefined)
@@ -10,22 +10,18 @@ else
 {%         endif -%}
 {%         if parameter.IsFile -%}
 {%             if parameter.IsArray -%}
-    {{ parameter.VariableName }}.forEach(item_ => content_.append("{{ parameter.Name }}", item_.data, item_.fileName ? item_.fileName : "{{ parameter.Name }}") );
+    {{ parameter.VariableName }}.forEach(item_ => content.append("{{ parameter.Name }}", item_.data, item_.fileName ? item_.fileName : "{{ parameter.Name }}") );
 {%             else -%}
-    content_.append("{{ parameter.Name }}", {{ parameter.VariableName }}.data, {{ parameter.VariableName }}.fileName ? {{ parameter.VariableName }}.fileName : "{{ parameter.Name }}");
+    content.append("{{ parameter.Name }}", {{ parameter.VariableName }}.data, {{ parameter.VariableName }}.fileName ? {{ parameter.VariableName }}.fileName : "{{ parameter.Name }}");
 {%             endif -%}
 {%         else -%}
-    content_.append("{{ parameter.Name }}", {{ parameter.VariableName }}.toString());
+    content.append("{{ parameter.Name }}", {{ parameter.VariableName }}.toString());
 {%         endif -%}
 {%     endfor -%}
 {% else -%}
 {%     if operation.HasContent -%}
-{%         if operation.ContentParameter.IsXmlBodyParameter -%}
-const content_ = {{ operation.ContentParameter.VariableName }};
-{%         else -%}
-const content_ = JSON.stringify({{ operation.ContentParameter.VariableName }});
-{%         endif -%}
+const content = {{ operation.ContentParameter.VariableName }};
 {%     else -%}
-const content_ = undefined;
+const content = undefined;
 {%     endif -%}
 {% endif -%}
