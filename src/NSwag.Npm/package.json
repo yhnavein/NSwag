@@ -1,6 +1,6 @@
 {
-  "name": "nswag",
-  "version": "11.17.3",
+  "name": "@yhnavein/nswag",
+  "version": "0.0.1-alpha1",
   "optionalDependencies": {},
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
     "url": "https://github.com/NSwag/NSwag/issues"
   },
   "engines": {
-    "npm": ">=3.10.8"
+    "npm": ">=4.0.0"
   },
   "description": "The Swagger API toolchain for .NET, Web API and TypeScript.",
   "directories": {},

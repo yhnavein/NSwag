@@ -1,1 +1,1 @@
-npm publish "%~dp0/../src/NSwag.Npm"
+npm publish "../src/NSwag.Npm" --access public
