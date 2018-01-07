@@ -3,16 +3,20 @@
 export interface I{{ Class }} {
 {%     for operation in Operations -%}
   {% template Client.Method.Documentation %}
-  {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Promise<{{ operation.ResultType }}>;
+  {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Observable<{{ operation.ResultType }}>;
 {%     endfor -%}}
 {% endif -%}
 
 @Injectable()
 export class {{ Class }} extends BaseClient{% if GenerateClientInterfaces %} implements I{{ Class }}{% endif %} {
 
+  constructor(http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    super(http, baseUrl);
+  }
+
 {% for operation in Operations -%}
   {% template Client.Method.Documentation %}
-  {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Promise<{{ operation.ResultType }}> {
+  {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Observable<{{ operation.ResultType }}> {
       {% template Client.RequestUrl %}
 
 {%     if operation.HasBody -%}
