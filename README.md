@@ -7,6 +7,7 @@
 [![MyGet CI](https://img.shields.io/myget/nswag-ci/vpre/NSwag.Core.svg?label=CI+nuget)](https://www.myget.org/gallery/nswag-ci)
 [![Gitter](https://img.shields.io/badge/gitter-join%20chat-1dce73.svg)](https://gitter.im/NSwag/NSwag)
 [![StackOverflow](https://img.shields.io/badge/questions-on%20StackOverflow-orange.svg?style=flat)](http://stackoverflow.com/questions/tagged/nswag)
+[![Wiki](https://img.shields.io/badge/docs-in%20wiki-orange.svg?style=flat)](https://github.com/rsuter/nswag/wiki)
 
 NSwag is a Swagger/OpenAPI 2.0 (3.0 in the works) toolchain for .NET, .NET Core, Web API, ASP.NET Core, TypeScript (jQuery, AngularJS, Angular 2+, Aurelia, KnockoutJS, and more) and other platforms, written in C#. The [Swagger specification](http://swagger.io) uses JSON and JSON Schema to describe a RESTful web API. The NSwag project provides tools to generate Swagger specifications from existing ASP.NET Web API controllers and client code from these Swagger specifications. 
 
@@ -23,7 +24,6 @@ The project is developed and maintained by [Rico Suter](http://rsuter.com) and o
 - By using the [Swagger or Swagger UI OWIN and ASP.NET Core Middlewares](https://github.com/NSwag/NSwag/wiki/Middlewares) (also serves the [Swagger UI](http://swagger.io/swagger-ui)) (recommended)
 - In your C# code, via [NuGet](https://www.nuget.org/packages?q=NSwag)
 - In your [MSBuild targets](https://github.com/NSwag/NSwag/wiki/MSBuild)
-- Generate code with [T4 templates](https://github.com/NSwag/NSwag/wiki/T4) in Visual Studio
 - In your [Cake](https://cakebuild.net) scripts using [Cake.NSwag](https://agc93.github.io/Cake.NSwag/doc/intro.html) (external community project, may not use latest NSwag version)
 
 **Tutorials**
@@ -35,6 +35,7 @@ The project is developed and maintained by [Rico Suter](http://rsuter.com) and o
 **Swagger Generators:**
 
 - ASP.NET Web API assembly to Swagger (supports .NET Core)
+    - [AspNetCoreToSwaggerGenerator](https://github.com/RSuter/NSwag/wiki/AspNetCoreToSwaggerGenerator)
     - [WebApiToSwaggerGenerator](https://github.com/NSwag/NSwag/wiki/WebApiToSwaggerGenerator)
         - Generates a Swagger specification for Web API controllers
     - [WebApiAssemblyToSwaggerGenerator](https://github.com/NSwag/NSwag/wiki/WebApiAssemblyToSwaggerGenerator)
@@ -87,11 +88,11 @@ Specification:
 
 Swagger generation:
 
-- **[NSwag.SwaggerGeneration](https://www.nuget.org/packages/NSwag.CodeGeneration/)** (.NET Standard 1.0 and .NET 4.5): 
+- **[NSwag.SwaggerGeneration](https://www.nuget.org/packages/NSwag.SwaggerGeneration/)** (.NET Standard 1.0 and .NET 4.5): 
     - Classes to generate Swagger specifications
-- **[NSwag.SwaggerGeneration.WebApi](https://www.nuget.org/packages/NSwag.CodeGeneration.WebApi/)** (.NET Standard 1.0 and .NET 4.5): 
+- **[NSwag.SwaggerGeneration.WebApi](https://www.nuget.org/packages/NSwag.SwaggerGeneration.WebApi/)** (.NET Standard 1.0 and .NET 4.5): 
     - Classes to generate Swagger specifications from Web API controllers, see [WebApiToSwaggerGenerator](https://github.com/RSuter/NSwag/wiki/WebApiToSwaggerGenerator)
-- **[NSwag.SwaggerGeneration.AspNetCore](https://www.nuget.org/packages/NSwag.CodeGeneration.AspNetCore/)** (.NET Standard 1.6 and .NET 4.5.1): 
+- **[NSwag.SwaggerGeneration.AspNetCore](https://www.nuget.org/packages/NSwag.SwaggerGeneration.AspNetCore/)** (.NET Standard 1.6 and .NET 4.5.1): 
     - (Experimental) Classes to generate Swagger specifications from ASP.NET Core MVC controllers using the ApiExplorer
 
 Code generation:
