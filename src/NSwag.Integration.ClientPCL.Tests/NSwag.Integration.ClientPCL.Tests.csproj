@@ -75,12 +75,6 @@
     <Compile Include="PersonsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NSwag.Integration.ClientPCL\NSwag.Integration.ClientPCL.csproj">
-      <Project>{ECD41518-A92C-4706-8E74-9707AFA554B7}</Project>
-      <Name>NSwag.Integration.ClientPCL</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

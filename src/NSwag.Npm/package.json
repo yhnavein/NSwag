@@ -1,6 +1,6 @@
 {
-  "name": "nswag",
-  "version": "11.18.7",
+  "name": "@yhnavein/nswag",
+  "version": "11.17.21-beta.1",
   "optionalDependencies": {},
   "repository": {
     "type": "git",

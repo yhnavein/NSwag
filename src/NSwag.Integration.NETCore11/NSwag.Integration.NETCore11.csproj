@@ -14,9 +14,4 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NSwag.Core\NSwag.Core.csproj" />
-    <ProjectReference Include="..\NSwag.Sample.NETCore11\NSwag.Sample.NETCore11.csproj" />
-  </ItemGroup>
-
 </Project>
